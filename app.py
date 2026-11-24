@@ -172,4 +172,42 @@ try:
 
 except Exception as e:
     st.error(f"Unable to fetch data: {e}")
+    st.markdown("### 🔗 Share AQI Dashboard on Telegram")
+
+    if st.button("📲 Send Dashboard Link to Telegram"):
+        try:
+            token = st.secrets["BOT_TOKEN"]
+            chat_id = st.secrets["CHAT_ID"]
+
+            dashboard_link = "https://aqimonitoringsystem.streamlit.app/"
+
+            message = (
+                "🌍 AQI Monitoring System\n\n"
+                "📍 RGUKT RK Valley, Kadapa\n\n"
+                "📊 Open Live AQI Dashboard:\n"
+                f"{dashboard_link}\n\n"
+                "Features:\n"
+                "✅ AQI and PM2.5 / PM10\n"
+                "✅ Temperature and Humidity\n"
+                "✅ CO2 and other gases"
+            )
+
+            tg_url = (
+                f"https://api.telegram.org/bot{token}/sendMessage"
+            )
+
+            result = requests.post(
+                tg_url,
+                data={"chat_id": chat_id, "text": message},
+                timeout=15
+            )
+
+            result.raise_for_status()
+
+            if result.json().get("ok"):
+                st.success("Dashboard link sent to Telegram!")
+
+        except Exception as e:
+            st.error(f"Telegram error: {e}")
+            
     
